@@ -1,14 +1,17 @@
 from __future__ import annotations
 from datetime import datetime, timezone
-from typing import Optional, List
-from uuid import uuid4  
-from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional
+from uuid import uuid4
+from sqlmodel import SQLModel, Field
 
-def _uuid() ->str:
+
+def _uuid() -> str:
     return str(uuid4())
+
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
 
 class Job(SQLModel, table=True):
     id: str = Field(default_factory=_uuid, primary_key=True)
@@ -18,7 +21,6 @@ class Job(SQLModel, table=True):
     status: str = Field(default="pending")
     created_at: datetime = Field(default_factory=_now)
 
-    thumbnails: List["Thumbnail"] = Relationship(back_populates="job")
 
 class Thumbnail(SQLModel, table=True):
     id: str = Field(default_factory=_uuid, primary_key=True)
@@ -28,4 +30,3 @@ class Thumbnail(SQLModel, table=True):
     error_message: Optional[str] = Field(default=None)
     created_at: datetime = Field(default_factory=_now)
     imagekit_url: Optional[str] = Field(default=None)
-    job: Optional[Job] = Relationship(back_populates="thumbnails")   
