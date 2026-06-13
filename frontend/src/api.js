@@ -14,7 +14,7 @@ export async function uploadHeadshot(file) {
 }
 
 export async function createjob({prompt, numThumbnails, headshotUrl}) {
-    const res = await fetch(`${API_BASE}/job`, {
+    const res = await fetch(`${API_BASE}/jobs`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -34,15 +34,15 @@ export async function createjob({prompt, numThumbnails, headshotUrl}) {
 export async function subscribeToJob(jobId, {onThumbnailReady, onThumbnailFailed, onJobComplete, OnError}) {
     const es = new EventSource(`${API_BASE}/jobs/${jobId}/stream`);
 
-    es.addEventListener("thumbnail_ready", (event) => {
+    es.addEventListener("thumbnail ready", (event) => {
         onThumbnailReady(JSON.parse(event.data));
     });
 
-    es.addEventListener("thumbnail_failed", (event) => {
+    es.addEventListener("thumbnail failed", (event) => {
         onThumbnailFailed(JSON.parse(event.data));
     });
 
-    es.addEventListener("job_completed", (event) => {
+    es.addEventListener("job completed", (event) => {
         onJobComplete(JSON.parse(event.data));
         es.close();
     });
